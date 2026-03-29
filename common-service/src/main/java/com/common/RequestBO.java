@@ -1,15 +1,13 @@
 package com.common;
 
-import java.util.List;
-
-import jakarta.annotation.Nonnull;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 
 @Setter
 @Getter
+@ToString
 public class RequestBO {
-	
-	@Nonnull
-	private List<Gender> gender;
+	private String question;
+	private String answer;
 }

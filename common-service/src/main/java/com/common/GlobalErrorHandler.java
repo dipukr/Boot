@@ -22,7 +22,8 @@ public class GlobalErrorHandler {
 
 	@ExceptionHandler(ConstraintViolationException.class)
 	public Rest<Void> handleConstraint(ConstraintViolationException ex) {
-		String message = ex.getConstraintViolations().stream().map(v -> v.getMessage()).findFirst()
+		String message = ex.getConstraintViolations().stream()
+				.map(v -> v.getMessage()).findFirst()
 				.orElse("Validation error");
 		return Rest.error(message, 400);
 	}
@@ -30,15 +31,18 @@ public class GlobalErrorHandler {
 	@ExceptionHandler(HandlerMethodValidationException.class)
 	public Rest<Void> handleValidation(HandlerMethodValidationException ex) {
 		String message = ex.getParameterValidationResults().stream()
-				.flatMap(result -> result.getResolvableErrors().stream()).map(error -> error.getDefaultMessage())
-				.findFirst().orElse("Validation error");
+				.flatMap(result -> result.getResolvableErrors().stream())
+				.map(error -> error.getDefaultMessage())
+				.findFirst()
+				.orElse("Validation error");
 		return Rest.error(message, 400);
 	}
 
 	@ExceptionHandler(MethodArgumentNotValidException.class)
 	public Rest<Void> handleValidation(MethodArgumentNotValidException ex) {
-		String errorMessage = ex.getBindingResult().getFieldErrors().stream()
-				.map(err -> err.getField() + ": " + err.getDefaultMessage()).collect(Collectors.joining(", "));
-		return Rest.error(errorMessage, 400);
+		String message = ex.getBindingResult().getFieldErrors().stream()
+				.map(err -> err.getField() + ": " + err.getDefaultMessage())
+				.collect(Collectors.joining(", "));
+		return Rest.error(message, 400);
 	}
 }
